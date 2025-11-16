@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>afterburner - Interactive Profile</title>
+    <style>
+        /* --- Root Variables & Base Styling --- */
+        :root {
+            --color-bg-dark: #1f1418;
+            --color-red: #ff3859;
+            --color-text-light: #f7f7f7;
+            --color-text-medium: #b3b3b3;
+            --color-card-bg: #2e2124;
+            --font-main: 'Arial', sans-serif;
+            scroll-behavior: smooth; 
+        }
+
+        body {
+            background-color: var(--color-bg-dark);
+            color: var(--color-text-light);
+            font-family: var(--font-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- Global Structure --- */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* --- Navigation Bar (Sticky and Smooth) --- */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: rgba(30, 20, 25, 0.98); 
+            padding: 10px 0;
+            border-bottom: 2px solid var(--color-red);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-links a {
+            color: var(--color-text-light);
+            text-decoration: none;
+            padding: 8px 20px;
+            margin: 0 10px;
+            transition: color 0.3s, background-color 0.3s, transform 0.2s;
+            border-radius: 5px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .nav-links a:hover {
+            color: var(--color-red);
+            background-color: rgba(255, 56, 89, 0.15);
+            transform: translateY(-2px);
+        }
+
+        /* --- Header/Profile Section --- */
+        .header {
+            text-align: center;
+            padding: 80px 0 60px;
+            position: relative;
+            /* BACKGROUND IMAGE ADDED: image_7743bf.jpg */
+            background-image: url('image_7743bf.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed; /* Parallax effect */
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5); /* Dark overlay for text readability */
+            z-index: 1;
+        }
+        
+        .profile-content {
+            position: relative;
+            z-index: 2;
+        }
+
+
+        .profile-pic {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 6px solid var(--color-red);
+            /* Profile glow effect remains */
+            box-shadow: 0 0 25px rgba(255, 56, 89, 0.7); 
+            object-fit: cover;
+            margin-bottom: 20px;
+            transition: transform 0.4s ease-in-out;
+        }
+        
+        .profile-pic:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .name-main {
+            font-size: 3.5em;
+            color: var(--color-red);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(255, 56, 89, 0.5);
+        }
+
+        /* --- Quote Section --- */
+        .quote-box {
+            background-color: var(--color-card-bg);
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 5px solid var(--color-red);
+            margin: 30px auto;
+            max-width: 700px;
+            font-style: italic;
+            color: var(--color-text-medium);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s ease;
+        }
+        
+        .quote-box:hover {
+            transform: scale(1.02);
+        }
+
+        /* --- Section Cards (Interactive) --- */
+        .section {
+            background-color: var(--color-card-bg);
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            transition: box-shadow 0.3s;
+        }
+        
+        .section:hover {
+            box-shadow: 0 6px 25px var(--color-red);
+        }
+
+        .section-title {
+            font-size: 2.2em;
+            color: var(--color-red);
+            border-bottom: 2px solid var(--color-red);
+            padding-bottom: 12px;
+            margin-bottom: 25px;
+            text-shadow: 0 0 5px rgba(255, 56, 89, 0.3);
+        }
+
+        /* --- Games/Activity Grid --- */
+        .game-grid {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .game-item {
+            background-color: #170d10;
+            padding: 15px;
+            border-radius: 8px;
+            width: 200px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s, background-color 0.3s, border 0.3s;
+            border: 1px solid transparent;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .game-item:hover {
+            transform: translateY(-8px);
+            background-color: #35252a;
+            border-color: var(--color-red);
+            box-shadow: 0 10px 20px rgba(255, 56, 89, 0.5);
+        }
+
+        .game-item .skill {
+            display: inline-block;
+            background-color: var(--color-red);
+            color: var(--color-bg-dark);
+            font-size: 0.85em;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+        
+        .game-item .skill-expert { background-color: #d1b402; }
+
+        /* --- Audio Controls --- */
+        .audio-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--color-card-bg);
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(255, 56, 89, 0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 1000;
+        }
+
+        .audio-controls button {
+            padding: 10px 15px;
+            border: 2px solid var(--color-red);
+            border-radius: 8px;
+            cursor: pointer;
+            background-color: var(--color-red);
+            color: var(--color-bg-dark);
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .audio-controls label {
+            color: var(--color-red);
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="background-music" loop>
+        <source src="INSERT_DIRECT_URL_TO_THE_CONTRACT_MP3_HERE" type="audio/mp3">
+        <source src="INSERT_DIRECT_URL_TO_THE_CONTRACT_MP3_HERE_2" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <div class="navbar">
+        <ul class="nav-links">
+            <li><a href="#home">HOME</a></li>
+            <li><a href="#about">ABOUT</a></li>
+            <li><a href="#games">GAMES</a></li>
+            <li><a href="#activity">ACTIVITY</a></li>
+        </ul>
+    </div>
+
+    <div class="audio-controls">
+        <label>Music: The Contract (TØP)</label>
+        <button id="playPauseButton">Play Music</button>
+        <button id="muteButton">Mute</button>
+        <input type="range" id="volumeSlider" min="0" max="1" step="0.05" value="0.4">
+    </div>
+
+    <div class="container">
+        
+        <section id="home" class="header">
+            <div class="profile-content">
+                <img src="image_773765.png" alt="Profile Picture" class="profile-pic">
+                <div class="name-main">AFTERBURNER</div>
+                <div class="nickname">Tae</div>
+                <p class="member-since">Member Since: Jun 3, 2019</p>
+            </div>
+        </section>
+
+        <section id="about" class="section">
+            <h2 class="section-title">About Me & Intentions</h2>
+            <div class="quote-box">
+                <p>"I've been travelling the deserts of my mind, and i havent found a drop of life, i havent found a drop of you, i havent found a drop of water"</p>
+                <p style="text-align: right; color: var(--color-red);">- B.man (Location Tag)</p>
+            </div>
+            <div class="about-text">
+                Intention are everything
+                Intention will set you free
+                Intention lack memory
+                Just try to be
+                
+                My sun makes me glow even on the darkest nights
+                <br><br>
+                <a href="https://guns.lol/afterburnerr" style="color: var(--color-red); text-decoration: none; font-weight: bold;">https://guns.lol/afterburnerr</a>
+            </div>
+            <br>
+            <p>Current Status: *currently doing nothing*</p>
+        </section>
+
+        <section id="games" class="section">
+            <h2 class="section-title">Games in Rotation</h2>
+            <div class="game-grid">
+                <div class="game-item" onclick="alert('DCS World: Intermediate skill in this favorite flight sim!')">
+                    <img src="https://via.placeholder.com/200x110/3c5b96/f7f7f7?text=DCS" alt="DCS World">
+                    <div class="game-name">DCS World</div>
+                    <div class="skill">Intermediate</div>
+                </div>
+                <div class="game-item" onclick="alert('Roblox: 37x Streak! Expert-level sandbox fun.')">
+                    <img src="https://via.placeholder.com/200x110/00a2ff/f7f7f7?text=ROBLOX" alt="Roblox">
+                    <div class="game-name">Roblox</div>
+                    <div class="skill skill-expert">Expert</div>
+                </div>
+                <div class="game-item" onclick="alert('Gunner, HEAT, PC!: Military vehicle simulation.')">
+                    <img src="https://via.placeholder.com/200x110/555555/f7f7f7?text=GHPC" alt="GHPC">
+                    <div class="game-name">GHPC</div>
+                    <div class="skill" style="background-color: #444;">Liked</div>
+                </div>
+                <div class="game-item" onclick="alert('Prison Architect: Management and strategy.')">
+                    <img src="https://via.placeholder.com/200x110/ff8c00/f7f7f7?text=PRISON+ARCHITECT" alt="Prison Architect">
+                    <div class="game-name">Prison Architect</div>
+                    <div class="skill" style="background-color: #444;">Liked</div>
+                </div>
+                <div class="game-item" onclick="alert('Stormworks: Build and Rescue.')">
+                    <img src="https://via.placeholder.com/200x110/1a4780/f7f7f7?text=STORMWORKS" alt="Stormworks">
+                    <div class="game-name">Stormworks</div>
+                    <div class="skill" style="background-color: #444;">Liked</div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="activity" class="section">
+            <h2 class="section-title">Recent Activity</h2>
+            <ul class="activity-list" style="list-style: none; padding-left: 0;">
+                <li style="margin-bottom: 10px; border-bottom: 1px dashed #443333; padding-bottom: 5px;"><strong>Roblox</strong> - 1h ago • <span style="color: var(--color-red); font-weight: bold;">37x Streak</span></li>
+                <li style="margin-bottom: 10px; border-bottom: 1px dashed #443333; padding-bottom: 5px;"><strong>Wordle</strong> - 2h ago</li>
+                <li style="margin-bottom: 10px; border-bottom: 1px dashed #443333; padding-bottom: 5px;"><strong>Krita</strong> - Recently used (Digital Art)</li>
+                <li style="margin-bottom: 10px; border-bottom: 1px dashed #443333; padding-bottom: 5px;"><strong>DCS World</strong> - 5d ago</li>
+                <li style="margin-bottom: 10px; border-bottom: 1px dashed #443333; padding-bottom: 5px;"><strong>Arena Breakout: Infinite</strong> - 7d ago • <span style="color: var(--color-red);">Returning after 1 month</span></li>
+                <li style="margin-bottom: 10px;"><strong>League of Legends</strong> - 8d ago • <span style="color: var(--color-red);">New Player</span></li>
+            </ul>
+        </section>
+
+    </div>
+
+    <script>
+        const audio = document.getElementById('background-music');
+        const playPauseButton = document.getElementById('playPauseButton');
+        const muteButton = document.getElementById('muteButton');
+        const volumeSlider = document.getElementById('volumeSlider');
+        
+        let isPlaying = false;
+        
+        // Function to start playback, overcoming browser limitations
+        function attemptPlay() {
+            const playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    isPlaying = true;
+                    playPauseButton.textContent = 'Pause Music';
+                }).catch(error => {
+                    // Autoplay was blocked. Wait for user interaction.
+                    console.log("Autoplay blocked. User interaction required.");
+                });
+            }
+        }
+
+        playPauseButton.addEventListener('click', function() {
+            if (isPlaying) {
+                audio.pause();
+                playPauseButton.textContent = 'Play Music';
+                isPlaying = false;
+            } else {
+                attemptPlay();
+            }
+        });
+
+        muteButton.addEventListener('click', function() {
+            audio.muted = !audio.muted;
+            if (audio.muted) {
+                muteButton.textContent = 'Unmute';
+            } else {
+                muteButton.textContent = 'Mute';
+            }
+        });
+
+        volumeSlider.addEventListener('input', function() {
+            audio.volume = volumeSlider.value;
+        });
+        
+        // Set initial volume
+        audio.volume = volumeSlider.value;
+        
+    </script>
+
+</body>
+</html>
